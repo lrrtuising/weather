@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Animations</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="weather-scene">
+            <div id="sun" class="hidden"></div>
+            <div id="rain" class="hidden"></div>
+            <div id="snow" class="hidden"></div>
+        </div>
+        <div class="controls">
+            <button onclick="setWeather('sunny')">Sunny</button>
+            <button onclick="setWeather('rainy')">Rainy</button>
+            <button onclick="setWeather('snowy')">Snowy</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
