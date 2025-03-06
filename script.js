@@ -24,29 +24,37 @@ function initParticlePool(size) {
 function setWeather(type) {
     if (currentWeather === type) return
     
-    // Cancel any pending animation
     if (animationFrame) {
         cancelAnimationFrame(animationFrame)
     }
 
-    // Batch DOM operations
-    requestAnimationFrame(() => {
-        Object.values(weatherElements).forEach(elem => {
-            elem.classList.add('fade-out', 'hidden')
-        })
+    // Clear previous weather state
+    clearParticles()
+    
+    // Hide all weather elements first
+    Object.values(weatherElements).forEach(elem => {
+        elem.classList.add('hidden')
+    })
 
-        const element = weatherElements[type === 'sunny' ? 'sun' : 
-                                     type === 'rainy' ? 'rain' : 'snow']
-        
-        element.classList.remove('hidden')
-        element.classList.add('fade-in')
-        
-        if (type === 'rainy') {
-            createRaindrops()
-        } else if (type === 'snowy') {
-            createSnowflakes()
+    // Show new weather element
+    const element = weatherElements[type === 'sunny' ? 'sun' : 
+                                 type === 'rainy' ? 'rain' : 'snow']
+    
+    element.classList.remove('hidden')
+    
+    // Set active button state
+    document.querySelectorAll('button').forEach(btn => {
+        btn.classList.remove('ring-2', 'ring-white')
+        if (btn.textContent.toLowerCase().includes(type)) {
+            btn.classList.add('ring-2', 'ring-white')
         }
     })
+
+    if (type === 'rainy') {
+        animationFrame = requestAnimationFrame(createRaindrops)
+    } else if (type === 'snowy') {
+        animationFrame = requestAnimationFrame(createSnowflakes)
+    }
     
     currentWeather = type
 }
@@ -57,39 +65,59 @@ function clearParticles() {
 }
 
 function createRaindrops() {
-    clearParticles()
-    const fragment = document.createDocumentFragment()
-    
-    for (let i = 0; i < 40; i++) {
-        const drop = particlePool[i].rain.cloneNode()
-        drop.style.cssText = `
-            left: ${Math.random() * 100}%;
-            animation-delay: ${Math.random() * 2}s
-        `
-        fragment.appendChild(drop)
+    // 只在雨滴数量少于25时添加新的雨滴
+    if (weatherElements.rain.children.length < 25) {
+        const fragment = document.createDocumentFragment()
+        
+        for (let i = 0; i < 25; i++) {
+            const drop = particlePool[i].rain.cloneNode()
+            drop.style.cssText = `
+                left: ${Math.random() * 100}%;
+                animation-delay: ${Math.random() * 4}s;
+            `
+            // 添加动画结束监听器，自动移除结束的雨滴
+            drop.addEventListener('animationend', () => {
+                drop.remove()
+            })
+            fragment.appendChild(drop)
+        }
+        
+        weatherElements.rain.appendChild(fragment)
     }
     
-    weatherElements.rain.appendChild(fragment)
+    if (currentWeather === 'rainy') {
+        animationFrame = requestAnimationFrame(createRaindrops)
+    }
 }
 
 function createSnowflakes() {
-    clearParticles()
-    const fragment = document.createDocumentFragment()
-    
-    for (let i = 0; i < 50; i++) {
-        const flake = particlePool[i].snow.cloneNode()
-        const size = Math.random() * 4 + 2
-        flake.style.cssText = `
-            left: ${Math.random() * 100}%;
-            animation-delay: ${Math.random() * 6}s;
-            opacity: ${Math.random() * 0.4 + 0.6};
-            width: ${size}px;
-            height: ${size}px
-        `
-        fragment.appendChild(flake)
+    // 只在雪花数量少于30时添加新的雪花
+    if (weatherElements.snow.children.length < 50) {
+        const fragment = document.createDocumentFragment()
+        
+        for (let i = 0; i < 50; i++) {
+            const flake = particlePool[i].snow.cloneNode()
+            const size = Math.random() * 1.5 + 0.5
+            flake.style.cssText = `
+                left: ${Math.random() * 100}%;
+                animation-delay: ${Math.random() * 8}s;
+                opacity: ${Math.random() * 0.3 + 0.4};
+                width: ${size}px;
+                height: ${size}px;
+            `
+            // 添加动画结束监听器，自动移除结束的雪花
+            flake.addEventListener('animationend', () => {
+                flake.remove()
+            })
+            fragment.appendChild(flake)
+        }
+        
+        weatherElements.snow.appendChild(fragment)
     }
     
-    weatherElements.snow.appendChild(fragment)
+    if (currentWeather === 'snowy') {
+        animationFrame = requestAnimationFrame(createSnowflakes)
+    }
 }
 
 // Initialize

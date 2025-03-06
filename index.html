@@ -3,20 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Animations</title>
+    <title>Weather Animation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <div class="container">
-        <div class="weather-scene">
-            <div id="sun" class="hidden"></div>
-            <div id="rain" class="hidden"></div>
-            <div id="snow" class="hidden"></div>
-        </div>
-        <div class="controls">
-            <button onclick="setWeather('sunny')">Sunny</button>
-            <button onclick="setWeather('rainy')">Rainy</button>
-            <button onclick="setWeather('snowy')">Snowy</button>
+<body class="min-h-screen bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center p-8">
+    <div class="max-w-md w-full">
+        <!-- Weather Card -->
+        <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl">
+            <h1 class="text-3xl font-bold text-white mb-6 text-center">Weather Animation</h1>
+            
+            <!-- Weather Display -->
+            <div class="relative h-64 bg-gradient-to-t from-blue-500/20 to-transparent rounded-xl mb-6 overflow-hidden">
+                <div id="sun" class="hidden"></div>
+                <div id="rain" class="hidden"></div>
+                <div id="snow" class="hidden"></div>
+            </div>
+            
+            <!-- Weather Controls -->
+            <div class="flex gap-3 justify-center">
+                <button onclick="setWeather('sunny')" 
+                    class="px-6 py-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-medium transition-colors">
+                    Sunny
+                </button>
+                <button onclick="setWeather('rainy')" 
+                    class="px-6 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-medium transition-colors">
+                    Rainy
+                </button>
+                <button onclick="setWeather('snowy')" 
+                    class="px-6 py-2 rounded-lg bg-slate-500 hover:bg-slate-600 text-white font-medium transition-colors">
+                    Snowy
+                </button>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
